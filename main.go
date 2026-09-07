@@ -20,35 +20,61 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Production Microservice Status</title>
+    <title>Production Microservice Dashboard</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 40px 20px; display: flex; justify-content: center; align-items: center; min-height: 80vh; }
-        .container { max-width: 680px; width: 100%%; background: #1e293b; border-radius: 16px; padding: 32px; box-shadow: 0 20px 35px rgba(0,0,0,0.4); border: 1px solid #334155; }
-        .badge { background: #10b981; color: #022c22; font-weight: bold; padding: 6px 14px; border-radius: 9999px; font-size: 13px; display: inline-block; margin-bottom: 18px; }
-        h1 { margin: 0 0 8px 0; font-size: 24px; color: #ffffff; }
-        p.desc { color: #94a3b8; margin: 0 0 24px 0; font-size: 14px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px; }
-        .card { background: #0f172a; padding: 16px; border-radius: 10px; border: 1px solid #334155; }
-        .card span { font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 6px; }
-        .card strong { font-size: 15px; color: #38bdf8; }
-        .footer { border-top: 1px solid #334155; padding-top: 16px; font-size: 13px; color: #94a3b8; text-align: center; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0b0f19; color: #f1f5f9; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 36px; max-width: 650px; width: 100%%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); }
+        .status-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 6px 14px; border-radius: 9999px; font-size: 13px; font-weight: 600; margin-bottom: 20px; }
+        .status-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
+        h1 { font-size: 26px; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
+        p.subtitle { color: #94a3b8; font-size: 14px; margin-bottom: 28px; line-height: 1.5; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 28px; }
+        .metric-box { background: #1f2937; border: 1px solid #374151; padding: 16px; border-radius: 10px; }
+        .metric-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #9ca3af; margin-bottom: 6px; font-weight: 600; }
+        .metric-value { font-size: 16px; font-weight: 600; color: #38bdf8; }
+        .footer { border-top: 1px solid #1f2937; padding-top: 20px; font-size: 13px; color: #6b7280; text-align: center; }
+        .footer strong { color: #e5e7eb; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="badge">● PRODUCTION LIVE & HEALTHY</div>
-        <h1>Enterprise Cloud Microservice</h1>
-        <p class="desc">Automated CI/CD Delivery Pipeline via GitHub Actions & AWS EC2</p>
-        <div class="grid">
-            <div class="card"><span>Host Environment</span><strong>AWS EC2 (Ubuntu 24.04)</strong></div>
-            <div class="card"><span>Container Engine</span><strong>Docker Multi-Stage</strong></div>
-            <div class="card"><span>System Uptime</span><strong>%s</strong></div>
-            <div class="card"><span>Allocated Memory</span><strong>%d KB</strong></div>
-            <div class="card"><span>Active Goroutines</span><strong>%d</strong></div>
-            <div class="card"><span>Architecture Target</span><strong>x86_64 Alpine Scratch</strong></div>
+    <div class="card">
+        <div class="status-badge">
+            <span class="status-dot"></span>
+            PRODUCTION SYSTEM ACTIVE & HEALTHY
         </div>
+        <h1>Enterprise Cloud Microservice</h1>
+        <p class="subtitle">Continuous Delivery Architecture via GitHub Actions, Docker Scratch & AWS EC2</p>
+        
+        <div class="grid">
+            <div class="metric-box">
+                <div class="metric-label">Target Cloud Host</div>
+                <div class="metric-value">AWS EC2 (Ubuntu 24.04)</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Container Engine</div>
+                <div class="metric-value">Docker Multi-Stage</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">System Uptime</div>
+                <div class="metric-value">%s</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Memory Allocation</div>
+                <div class="metric-value">%d KB</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Active Goroutines</div>
+                <div class="metric-value">%d</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Base OS Image</div>
+                <div class="metric-value">Alpine Scratch (Zero Bloat)</div>
+            </div>
+        </div>
+
         <div class="footer">
-            Engineered by Mohammad Faiz Ansari • DevOps & Cloud Infrastructure
+            Engineered & Deployed by <strong>Mohammad Faiz Ansari</strong> • DevOps & Cloud Infrastructure
         </div>
     </div>
 </body>
