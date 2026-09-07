@@ -36,9 +36,14 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo docker system prune -af --volumes || true
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/cloud-microservice:latest
-            docker stop cloud-app || true
-            docker rm cloud-app || true
-            docker run -d --name cloud-app -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/cloud-microservice:latest
+         script: |
+          sudo journalctl --vacuum-time=1d || true
+          sudo rm -rf /tmp/* /var/tmp/* || true
+          sudo apt-get clean || true
+          sudo docker stop cloud-app || true
+          sudo docker rm cloud-app || true
+          sudo docker system prune -af --volumes || true
+          sudo systemctl restart containerd || true
+          sudo systemctl restart docker || true
+          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/cloud-microservice:latest
+          sudo docker run -d --name cloud-app -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/cloud-microservice:latest
