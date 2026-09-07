@@ -13,7 +13,9 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
 	var mem runtime.MemStats
 	runtime.ReadMemStats(&mem)
 
-	uptime := time.Since(startTime).Round(time.Second)
+	uptime := time.Since(startTime).Round(time.Second).String()
+	allocMem := mem.Alloc / 1024
+	goroutines := runtime.NumGoroutine()
 
 	html := fmt.Sprintf(`<!DOCTYPE html>
 <html lang="en">
@@ -26,7 +28,7 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0b0f19; color: #f1f5f9; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 36px; max-width: 650px; width: 100%%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); }
         .status-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 6px 14px; border-radius: 9999px; font-size: 13px; font-weight: 600; margin-bottom: 20px; }
-        .status-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
+        .status-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%%; box-shadow: 0 0 10px #10b981; }
         h1 { font-size: 26px; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
         p.subtitle { color: #94a3b8; font-size: 14px; margin-bottom: 28px; line-height: 1.5; }
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 28px; }
@@ -47,27 +49,27 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
         <p class="subtitle">Continuous Delivery Architecture via GitHub Actions, Docker Scratch & AWS EC2</p>
         
         <div class="grid">
-            <div class="metric-box">
+            <div class="card-item metric-box">
                 <div class="metric-label">Target Cloud Host</div>
                 <div class="metric-value">AWS EC2 (Ubuntu 24.04)</div>
             </div>
-            <div class="metric-box">
+            <div class="card-item metric-box">
                 <div class="metric-label">Container Engine</div>
                 <div class="metric-value">Docker Multi-Stage</div>
             </div>
-            <div class="metric-box">
+            <div class="card-item metric-box">
                 <div class="metric-label">System Uptime</div>
                 <div class="metric-value">%s</div>
             </div>
-            <div class="metric-box">
+            <div class="card-item metric-box">
                 <div class="metric-label">Memory Allocation</div>
                 <div class="metric-value">%d KB</div>
             </div>
-            <div class="metric-box">
+            <div class="card-item metric-box">
                 <div class="metric-label">Active Goroutines</div>
                 <div class="metric-value">%d</div>
             </div>
-            <div class="metric-box">
+            <div class="card-item metric-box">
                 <div class="metric-label">Base OS Image</div>
                 <div class="metric-value">Alpine Scratch (Zero Bloat)</div>
             </div>
@@ -78,7 +80,7 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
         </div>
     </div>
 </body>
-</html>`, uptime.String(), mem.Alloc/1024, runtime.NumGoroutine())
+</html>`, uptime, allocMem, goroutines)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
